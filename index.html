@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyVault | Academic & Olympiad Archive</title>
+  <meta name="description" content="Comprehensive indexed repository of 4,750+ academic, JEE, NEET, and Olympiad study materials.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="sticky top-0 z-30 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 gap-4">
+        
+        <!-- Logo & Title -->
+        <div class="flex items-center gap-3 shrink-0">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-indigo-500/20 text-white font-bold text-lg">
+            <i data-lucide="book-open" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h1 class="text-lg font-bold tracking-tight bg-gradient-to-r from-white via-slate-200 to-indigo-300 bg-clip-text text-transparent">
+              StudyVault
+            </h1>
+            <p class="text-xs text-slate-400 font-medium">Academic & Olympiad Archive</p>
+          </div>
+        </div>
+
+        <!-- Global Search Bar -->
+        <div class="flex-1 max-w-2xl relative">
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <i data-lucide="search" class="w-4 h-4"></i>
+            </div>
+            <input 
+              type="text" 
+              id="searchInput" 
+              placeholder="Search across 4,753 files, topics, exams, or institutes... (Press '/' to focus)" 
+              class="w-full pl-10 pr-12 py-2 bg-slate-800/80 border border-slate-700/80 rounded-xl text-sm placeholder-slate-400 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-inner"
+            >
+            <div class="absolute inset-y-0 right-0 pr-3 flex items-center gap-1">
+              <button id="clearSearchBtn" class="hidden text-slate-400 hover:text-slate-200 p-1">
+                <i data-lucide="x" class="w-3.5 h-3.5"></i>
+              </button>
+              <kbd class="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-semibold text-slate-400 bg-slate-700/60 border border-slate-600/60 rounded">
+                /
+              </kbd>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Controls -->
+        <div class="flex items-center gap-2 shrink-0">
+          <!-- Cloud Settings Button -->
+          <button id="settingsBtn" title="Configure Cloud Sync & Options" class="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
+            <i data-lucide="settings" class="w-5 h-5"></i>
+          </button>
+
+          <!-- Theme Toggle Button -->
+          <button id="themeToggleBtn" title="Toggle Theme" class="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
+            <i data-lucide="sun" id="themeIcon" class="w-5 h-5"></i>
+          </button>
+
+          <!-- GitHub Link -->
+          <a href="https://github.com/NiranX-music/study-material-portal" target="_blank" rel="noopener noreferrer" title="View on GitHub" class="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
+            <i data-lucide="github" class="w-5 h-5"></i>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- QUICK STATS BAR -->
+  <section class="bg-slate-950/60 border-b border-slate-800/80 py-2.5 px-4 text-xs font-medium text-slate-400">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-4 flex-wrap">
+        <span class="flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <strong class="text-slate-200" id="statTotalCount">4,753</strong> Files Indexed
+        </span>
+        <span class="text-slate-700">•</span>
+        <span class="flex items-center gap-1.5">
+          <i data-lucide="hard-drive" class="w-3.5 h-3.5 text-indigo-400"></i>
+          <strong class="text-slate-200">39.7 GB</strong> Curated Vault
+        </span>
+        <span class="text-slate-700">•</span>
+        <span class="flex items-center gap-1.5">
+          <i data-lucide="layers" class="w-3.5 h-3.5 text-cyan-400"></i>
+          <strong class="text-slate-200">275+</strong> Granular Subfolders
+        </span>
+      </div>
+
+      <!-- Quick Tracker Summary -->
+      <div class="flex items-center gap-3">
+        <button id="quickStarredBtn" class="flex items-center gap-1 hover:text-amber-300 transition-colors">
+          <i data-lucide="star" class="w-3.5 h-3.5 text-amber-400 fill-amber-400/20"></i>
+          <span>Starred (<span id="starredCount">0</span>)</span>
+        </button>
+        <button id="quickCompletedBtn" class="flex items-center gap-1 hover:text-emerald-300 transition-colors">
+          <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span>Completed (<span id="completedCount">0</span>)</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN APP CONTAINER -->
+  <div class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 flex flex-col lg:flex-row gap-6">
+
+    <!-- SIDEBAR FILTERS -->
+    <aside class="w-full lg:w-72 shrink-0 space-y-6">
+      <div class="bg-slate-800/40 border border-slate-800 rounded-2xl p-5 sticky top-24 space-y-6">
+
+        <!-- Filter Header -->
+        <div class="flex items-center justify-between pb-3 border-b border-slate-700/60">
+          <h2 class="text-sm font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+            <i data-lucide="filter" class="w-4 h-4 text-indigo-400"></i>
+            Filters & Facets
+          </h2>
+          <button id="resetFiltersBtn" class="text-xs text-indigo-400 hover:text-indigo-300 font-medium">
+            Reset All
+          </button>
+        </div>
+
+        <!-- Study Tracker Status Filter -->
+        <div class="space-y-2">
+          <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Status</label>
+          <div class="grid grid-cols-3 gap-1.5 p-1 bg-slate-900/60 rounded-xl border border-slate-800 text-xs font-medium">
+            <button class="tracker-filter-btn active py-1.5 rounded-lg text-center transition-all bg-indigo-600 text-white" data-status="all">All</button>
+            <button class="tracker-filter-btn py-1.5 rounded-lg text-center transition-all text-slate-400 hover:text-slate-200" data-status="starred">⭐ Starred</button>
+            <button class="tracker-filter-btn py-1.5 rounded-lg text-center transition-all text-slate-400 hover:text-slate-200" data-status="completed">✅ Done</button>
+          </div>
+        </div>
+
+        <!-- Subject Filter -->
+        <div class="space-y-2">
+          <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Subject</label>
+          <div class="space-y-1" id="subjectFilterContainer">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+        <!-- Document Type Filter -->
+        <div class="space-y-2">
+          <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Document Type</label>
+          <div class="space-y-1" id="docTypeFilterContainer">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+        <!-- Exam / Level Filter -->
+        <div class="space-y-2">
+          <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Exam & Level</label>
+          <div class="space-y-1 max-h-48 overflow-y-auto pr-1" id="examFilterContainer">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+        <!-- Source / Coaching Filter -->
+        <div class="space-y-2">
+          <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Source & Institute</label>
+          <div class="space-y-1 max-h-48 overflow-y-auto pr-1" id="sourceFilterContainer">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- CONTENT DISPLAY AREA -->
+    <main class="flex-1 flex flex-col min-w-0 space-y-4">
+
+      <!-- Active Filters Bar & Controls -->
+      <div class="bg-slate-800/40 border border-slate-800 rounded-2xl p-4 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          
+          <!-- Results Count -->
+          <div class="text-sm text-slate-300">
+            Showing <strong class="text-white" id="visibleCount">0</strong> of <span id="totalMatchesCount">0</span> matches
+          </div>
+
+          <!-- Controls: Sort & Layout -->
+          <div class="flex items-center gap-3">
+            <!-- Sort Selector -->
+            <div class="flex items-center gap-2 text-xs text-slate-400">
+              <label for="sortSelect" class="shrink-0">Sort:</label>
+              <select id="sortSelect" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                <option value="name_asc">Name (A-Z)</option>
+                <option value="name_desc">Name (Z-A)</option>
+                <option value="size_desc">Size (Largest)</option>
+                <option value="size_asc">Size (Smallest)</option>
+                <option value="subject">Subject</option>
+                <option value="exam">Exam</option>
+              </select>
+            </div>
+
+            <!-- View Toggle: Grid / List -->
+            <div class="flex items-center bg-slate-900 border border-slate-700 rounded-lg p-0.5">
+              <button id="viewGridBtn" class="p-1.5 rounded-md text-slate-200 bg-slate-800 transition-all" title="Grid View">
+                <i data-lucide="layout-grid" class="w-4 h-4"></i>
+              </button>
+              <button id="viewListBtn" class="p-1.5 rounded-md text-slate-400 hover:text-slate-200 transition-all" title="Table / List View">
+                <i data-lucide="list" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Filter Badges Container -->
+        <div id="activeFilterPills" class="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-800/80">
+          <!-- Active filter pills populated dynamically -->
+        </div>
+      </div>
+
+      <!-- CARDS GRID CONTAINER -->
+      <div id="itemsContainer" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- EMPTY STATE -->
+      <div id="emptyState" class="hidden py-16 text-center space-y-4">
+        <div class="w-16 h-16 mx-auto rounded-full bg-slate-800/80 border border-slate-700 flex items-center justify-center text-slate-400">
+          <i data-lucide="file-question" class="w-8 h-8"></i>
+        </div>
+        <div>
+          <h3 class="text-base font-semibold text-white">No matching study materials found</h3>
+          <p class="text-sm text-slate-400 mt-1 max-w-sm mx-auto">Try adjusting your search terms or clearing some filters to see more materials.</p>
+        </div>
+        <button id="emptyResetBtn" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition-all shadow-lg shadow-indigo-500/20">
+          Clear All Filters
+        </button>
+      </div>
+
+      <!-- PAGINATION BAR -->
+      <div id="paginationBar" class="flex items-center justify-between pt-4 border-t border-slate-800">
+        <div class="text-xs text-slate-400">
+          Page <span id="currentPageNum">1</span> of <span id="totalPagesNum">1</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="prevPageBtn" class="px-3 py-1.5 bg-slate-800 border border-slate-700 hover:bg-slate-700 text-xs text-slate-200 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+            Previous
+          </button>
+          <div id="pageNumbersContainer" class="flex items-center gap-1">
+            <!-- Dynamic page pills -->
+          </div>
+          <button id="nextPageBtn" class="px-3 py-1.5 bg-slate-800 border border-slate-700 hover:bg-slate-700 text-xs text-slate-200 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+            Next
+          </button>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- SETTINGS MODAL -->
+  <div id="settingsModal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <i data-lucide="settings" class="w-5 h-5 text-indigo-400"></i>
+          Portal Settings
+        </h3>
+        <button id="closeSettingsBtn" class="text-slate-400 hover:text-slate-200 p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4 text-sm">
+        <div>
+          <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5">
+            Cloud Storage Base URL (Optional)
+          </label>
+          <input 
+            type="url" 
+            id="cloudBaseUrlInput" 
+            placeholder="e.g. https://drive.google.com/drive/folders/... or OneDrive link" 
+            class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-xl text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+          >
+          <p class="text-[11px] text-slate-400 mt-1">
+            If you sync your Downloads folder to cloud storage, paste the shared folder URL here to enable 1-click cloud access for every item.
+          </p>
+        </div>
+
+        <div class="pt-2 border-t border-slate-800">
+          <h4 class="text-xs font-semibold uppercase text-slate-400 mb-2">Keyboard Shortcuts</h4>
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div class="flex items-center justify-between p-2 bg-slate-800/60 rounded-lg">
+              <span class="text-slate-300">Focus Search</span>
+              <kbd class="px-1.5 py-0.5 bg-slate-700 text-slate-300 rounded text-[10px] font-mono">/</kbd>
+            </div>
+            <div class="flex items-center justify-between p-2 bg-slate-800/60 rounded-lg">
+              <span class="text-slate-300">Close Modals</span>
+              <kbd class="px-1.5 py-0.5 bg-slate-700 text-slate-300 rounded text-[10px] font-mono">Esc</kbd>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end pt-3 border-t border-slate-800">
+        <button id="saveSettingsBtn" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition-all shadow-lg shadow-indigo-500/20">
+          Save Settings
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- FOOTER -->
+  <footer class="bg-slate-950 border-t border-slate-800/80 py-6 px-4 text-xs text-slate-400 mt-auto">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span>StudyVault &copy; 2026</span>
+        <span>•</span>
+        <span>Hosted on GitHub Pages</span>
+      </div>
+      <div>
+        <span>Repository: <a href="https://github.com/NiranX-music/study-material-portal" class="text-indigo-400 hover:underline">NiranX-music/study-material-portal</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
