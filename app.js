@@ -380,10 +380,51 @@ class StudyVaultApp {
     }
   }
 
+  getGitHubRepoInfo(item) {
+    const p = item.path || '';
+    const GITHUB_USER = 'NiranX-music';
+    const isTooLarge = (item.bytes || 0) >= 100 * 1024 * 1024;
+    
+    let repo = null;
+    let subpath = '';
+    
+    if (p.startsWith('By Coaching & Institutes/Allen Career Institute/Modules/')) {
+      repo = 'study-vault-allen-modules';
+      subpath = p.substring('By Coaching & Institutes/Allen Career Institute/Modules/'.length);
+    } else if (p.startsWith('By Coaching & Institutes/Allen Career Institute/Test Series & Papers/')) {
+      repo = 'study-vault-allen-tests';
+      subpath = p.substring('By Coaching & Institutes/Allen Career Institute/Test Series & Papers/'.length);
+    } else if (p.startsWith('Academics & Olympiads/Chemistry/')) {
+      repo = 'study-vault-chemistry';
+      subpath = p.substring('Academics & Olympiads/Chemistry/'.length);
+    } else if (p.startsWith('Academics & Olympiads/Astronomy & Astrophysics/')) {
+      repo = 'study-vault-astronomy';
+      subpath = p.substring('Academics & Olympiads/Astronomy & Astrophysics/'.length);
+    } else if (p.startsWith('Academics & Olympiads/Mathematics/')) {
+      repo = 'study-vault-math';
+      subpath = p.substring('Academics & Olympiads/Mathematics/'.length);
+    } else if (p.startsWith('Academics & Olympiads/Physics/')) {
+      repo = 'study-vault-physics';
+      subpath = p.substring('Academics & Olympiads/Physics/'.length);
+    }
+    
+    if (!repo) return null;
+    
+    const encodedSubpath = subpath.split('/').map(encodeURIComponent).join('/');
+    return {
+      repo,
+      isTooLarge,
+      blobUrl: `https://github.com/${GITHUB_USER}/${repo}/blob/main/${encodedSubpath}`,
+      rawUrl: `https://raw.githubusercontent.com/${GITHUB_USER}/${repo}/main/${encodedSubpath}`,
+      repoUrl: `https://github.com/${GITHUB_USER}/${repo}`
+    };
+  }
+
   createCardHtml(item) {
     const isStarred = this.starredIds.has(item.id);
     const isCompleted = this.completedIds.has(item.id);
     const badgeColor = this.getSubjectBadgeColor(item.subject);
+    const ghInfo = this.getGitHubRepoInfo(item);
 
     return `
       <div class="study-card rounded-2xl p-4 flex flex-col justify-between relative group">
@@ -394,9 +435,16 @@ class StudyVaultApp {
             <span class="px-2 py-0.5 rounded-full border text-[11px] font-semibold ${badgeColor}">
               ${item.subject}
             </span>
-            <span class="text-slate-400 font-mono text-[11px] bg-slate-900/60 px-1.5 py-0.5 rounded border border-slate-800">
-              ${item.size}
-            </span>
+            <div class="flex items-center gap-1.5">
+              ${ghInfo && ghInfo.isTooLarge ? `
+                <span class="text-amber-400/90 text-[10px] font-medium bg-amber-950/40 px-1.5 py-0.5 rounded border border-amber-800/40" title="File is >= 100MB; kept locally due to GitHub limits">
+                  Local (>100MB)
+                </span>
+              ` : ''}
+              <span class="text-slate-400 font-mono text-[11px] bg-slate-900/60 px-1.5 py-0.5 rounded border border-slate-800">
+                ${item.size}
+              </span>
+            </div>
           </div>
 
           <!-- Title -->
@@ -421,8 +469,8 @@ class StudyVaultApp {
         <!-- Footer Actions -->
         <div class="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between gap-2 text-xs">
           
-          <!-- Local Path Copy Buttons -->
-          <div class="flex items-center gap-1.5">
+          <!-- Local Path & Online Access Buttons -->
+          <div class="flex items-center gap-1.5 flex-wrap">
             <button 
               onclick="window.studyVault.copyPath('${this.escapeQuotes(item.full_path)}')"
               class="p-1.5 bg-slate-800/80 hover:bg-indigo-600 hover:text-white rounded-lg text-slate-400 transition-all border border-slate-700/60" 
@@ -437,12 +485,32 @@ class StudyVaultApp {
             >
               <i data-lucide="link" class="w-3.5 h-3.5"></i>
             </button>
+            ${ghInfo && !ghInfo.isTooLarge ? `
+              <a 
+                href="${ghInfo.rawUrl}" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                class="p-1.5 bg-slate-800/80 hover:bg-emerald-600 hover:text-white rounded-lg text-slate-400 transition-all border border-slate-700/60"
+                title="View / Download Online (Raw PDF)"
+              >
+                <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+              </a>
+              <a 
+                href="${ghInfo.blobUrl}" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                class="p-1.5 bg-slate-800/80 hover:bg-purple-600 hover:text-white rounded-lg text-slate-400 transition-all border border-slate-700/60"
+                title="Open on GitHub (${ghInfo.repo})"
+              >
+                <i data-lucide="github" class="w-3.5 h-3.5"></i>
+              </a>
+            ` : ''}
             ${this.cloudBaseUrl ? `
               <a 
                 href="${this.getCloudUrl(item.path)}" 
                 target="_blank" 
                 class="p-1.5 bg-slate-800/80 hover:bg-emerald-600 hover:text-white rounded-lg text-slate-400 transition-all border border-slate-700/60"
-                title="Open Cloud Link"
+                title="Open Custom Cloud Link"
               >
                 <i data-lucide="cloud-download" class="w-3.5 h-3.5"></i>
               </a>
@@ -477,6 +545,7 @@ class StudyVaultApp {
     const isStarred = this.starredIds.has(item.id);
     const isCompleted = this.completedIds.has(item.id);
     const badgeColor = this.getSubjectBadgeColor(item.subject);
+    const ghInfo = this.getGitHubRepoInfo(item);
 
     return `
       <div class="study-card rounded-xl p-3 flex items-center justify-between gap-4 text-xs">
@@ -492,7 +561,12 @@ class StudyVaultApp {
           </div>
         </div>
 
-        <div class="flex items-center gap-3 shrink-0">
+        <div class="flex items-center gap-2.5 shrink-0">
+          ${ghInfo && ghInfo.isTooLarge ? `
+            <span class="text-amber-400/90 text-[10px] font-medium bg-amber-950/40 px-1.5 py-0.5 rounded border border-amber-800/40">
+              Local (>100MB)
+            </span>
+          ` : ''}
           <span class="text-slate-400 font-mono text-[11px]">${item.size}</span>
           <button 
             onclick="window.studyVault.copyPath('${this.escapeQuotes(item.full_path)}')"
@@ -501,6 +575,26 @@ class StudyVaultApp {
           >
             <i data-lucide="copy" class="w-3.5 h-3.5"></i>
           </button>
+          ${ghInfo && !ghInfo.isTooLarge ? `
+            <a 
+              href="${ghInfo.rawUrl}" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="p-1.5 hover:bg-emerald-600 hover:text-white rounded text-slate-400 transition-colors"
+              title="View / Download Online (Raw PDF)"
+            >
+              <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+            </a>
+            <a 
+              href="${ghInfo.blobUrl}" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="p-1.5 hover:bg-purple-600 hover:text-white rounded text-slate-400 transition-colors"
+              title="Open on GitHub"
+            >
+              <i data-lucide="github" class="w-3.5 h-3.5"></i>
+            </a>
+          ` : ''}
           <button 
             onclick="window.studyVault.toggleStar(${item.id})" 
             class="p-1.5 rounded transition-colors ${isStarred ? 'text-amber-400' : 'text-slate-500 hover:text-amber-400'}"
